@@ -1,0 +1,16 @@
+"use client";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { ArrowUpRight, Briefcase, CheckCircle2 } from "lucide-react";
+import Link from "next/link";
+import { useToast } from "@/app/providers";
+import { useDialog } from "@/components/Dialog";
+import { EmptyState, ErrorNote, PageHeader, Skeleton } from "@/components/ui";
+import { api } from "@/lib/api";
+import type { Application } from "@/lib/portal";
+import { dateTime } from "@/lib/portal";
+export default function ApplicationsPage() {
+  const qc = useQueryClient(), toast = useToast(), dialog = useDialog();
+  const q = useQuery({ queryKey: ["applications"], queryFn: () => api<Application[]>("/applications"), refetchInterval: 30000 });
+  const withdraw = useMutation({ mutationFn: (id: number) => api(`/applications/${id}/withdraw`, { method: "POST" }), onSuccess: () => { void qc.invalidateQueries({ queryKey: ["applications"] }); toast("Application withdrawn"); }, onError: (e) => toast(e.message, "error") });
+  return <div className="workspace-page space-y-6"><PageHeader eyebrow="Your hiring journey" title="Every application. A clear next step." subtitle="Follow the roles you applied to directly through HirePilot. Status updates come from the hiring team." actions={<Link href="/careers" className="btn btn-primary">Explore roles <ArrowUpRight size={14} /></Link>} />{q.error && <ErrorNote>{q.error.message}</ErrorNote>}{q.isPending ? <Skeleton className="h-40" /> : !q.data?.length ? <EmptyState icon={<Briefcase size={24} />} title="Your story starts with an application" body="Explore published roles and make your introduction. Each application will appear here." action={<Link href="/careers" className="btn">Browse opportunities</Link>} /> : <ul className="space-y-5">{q.data.map((a) => <li key={a.id} className="card p-6"><div className="flex flex-wrap items-start justify-between gap-4"><div><p className="eyebrow">{a.job.company}</p><Link href={`/careers/${a.job.slug}`} className="mt-2 block text-lg font-semibold hover:text-brand">{a.job.title}</Link><p className="mt-2 text-xs text-muted">Applied {dateTime(a.created_at)} · Reference #{a.id} · {a.resume_name}</p></div><span className="chip bg-brand-soft text-brand">{a.status.replaceAll("_", " ")}</span></div><ol className="mt-6 space-y-5 border-l border-line pl-5">{a.history.map((h, i) => <li key={i} className="relative"><CheckCircle2 size={14} className="absolute -left-[28px] top-0.5 bg-surface text-brand" /><div className="flex flex-wrap justify-between gap-2 text-xs"><span className="font-semibold capitalize">{h.status.replaceAll("_", " ")}</span><time className="text-subtle">{dateTime(h.at)}</time></div><p className="mt-1 text-sm text-muted">{h.message}</p></li>)}</ol>{!["withdrawn", "not_selected", "offer"].includes(a.status) && <button className="btn btn-ghost btn-sm mt-5 text-bad!" disabled={withdraw.isPending} onClick={async () => { if (await dialog.confirm({ title: "Withdraw this application?", body: "The hiring team will see it as withdrawn. You cannot submit another application to this role from this account.", confirmLabel: "Withdraw", danger: true })) withdraw.mutate(a.id); }}>Withdraw application</button>}</li>)}</ul>}</div>;
+}

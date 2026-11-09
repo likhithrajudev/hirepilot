@@ -1,0 +1,252 @@
+{
+  "metered": [
+    {
+      "key": "resumes",
+      "label": "Resumes",
+      "period": "total",
+      "unit": "resumes"
+    },
+    {
+      "key": "tailor",
+      "label": "AI resume tailoring",
+      "period": "month",
+      "unit": "tailors"
+    },
+    {
+      "key": "ats_check",
+      "label": "ATS checks",
+      "period": "month",
+      "unit": "checks"
+    },
+    {
+      "key": "review",
+      "label": "Hiring-manager role reviews",
+      "period": "month",
+      "unit": "reviews"
+    },
+    {
+      "key": "apply_kit",
+      "label": "Application kits",
+      "period": "month",
+      "unit": "kits"
+    },
+    {
+      "key": "scans",
+      "label": "Job scans",
+      "period": "month",
+      "unit": "scans"
+    },
+    {
+      "key": "interview",
+      "label": "Interview credits",
+      "period": "month",
+      "unit": "credits"
+    }
+  ],
+  "interview_costs": {
+    "text": 1,
+    "voice": 2,
+    "coding": 2
+  },
+  "roadmap": [
+    {
+      "key": "apply_forms",
+      "label": "Application form scanner and autofill",
+      "plans": [
+        "captain",
+        "fleet"
+      ]
+    },
+    {
+      "key": "alerts",
+      "label": "Email alerts for new matching roles",
+      "plans": [
+        "pilot",
+        "captain",
+        "fleet"
+      ]
+    },
+    {
+      "key": "design",
+      "label": "System design and low-level design tracks",
+      "plans": [
+        "captain",
+        "fleet"
+      ]
+    }
+  ],
+  "plans": [
+    {
+      "id": "cadet",
+      "name": "Cadet",
+      "tagline": "Start your search",
+      "audience": "Try everything with generous limits",
+      "prices": {
+        "USD": {
+          "month": 0,
+          "year": 0
+        },
+        "INR": {
+          "month": 0,
+          "year": 0
+        }
+      },
+      "limits": {
+        "resumes": 1,
+        "tailor": 3,
+        "ats_check": 5,
+        "review": 10,
+        "apply_kit": 3,
+        "scans": 5,
+        "interview": 2
+      },
+      "templates": [
+        "classic",
+        "minimal"
+      ],
+      "seats": 1,
+      "support": "Community",
+      "rank": 0,
+      "contact_sales": false,
+      "recommended": false,
+      "highlights": [
+        "1 resume with 2 ATS-safe templates",
+        "Scan 250+ company career sites",
+        "2 interview credits a month: 1 voice or 2 text interviews",
+        "A feedback report with every interview",
+        "Bring your own OpenAI key for unlimited AI"
+      ]
+    },
+    {
+      "id": "pilot",
+      "name": "Pilot",
+      "tagline": "For an active search",
+      "audience": "Students and new graduates applying widely",
+      "prices": {
+        "USD": {
+          "month": 12,
+          "year": 120
+        },
+        "INR": {
+          "month": 199,
+          "year": 1990
+        }
+      },
+      "limits": {
+        "resumes": 5,
+        "tailor": 40,
+        "ats_check": 60,
+        "review": 150,
+        "apply_kit": 30,
+        "scans": 60,
+        "interview": 12
+      },
+      "templates": [
+        "classic",
+        "modern",
+        "compact",
+        "academic",
+        "minimal"
+      ],
+      "seats": 1,
+      "support": "Email",
+      "rank": 1,
+      "contact_sales": false,
+      "recommended": false,
+      "highlights": [
+        "AI included, no API key needed",
+        "All 5 ATS-safe templates",
+        "Role reviews written like a hiring manager's",
+        "12 interview credits a month: up to 6 voice or 12 text interviews",
+        "Answer-by-answer feedback and a practice plan"
+      ]
+    },
+    {
+      "id": "captain",
+      "name": "Captain",
+      "tagline": "Go all in",
+      "audience": "Anyone running a serious, multi-company search",
+      "prices": {
+        "USD": {
+          "month": 29,
+          "year": 290
+        },
+        "INR": {
+          "month": 499,
+          "year": 4990
+        }
+      },
+      "limits": {
+        "resumes": 25,
+        "tailor": 200,
+        "ats_check": 300,
+        "review": 600,
+        "apply_kit": 150,
+        "scans": null,
+        "interview": 60
+      },
+      "templates": [
+        "classic",
+        "modern",
+        "compact",
+        "academic",
+        "minimal"
+      ],
+      "seats": 1,
+      "support": "Priority email",
+      "rank": 2,
+      "contact_sales": false,
+      "recommended": true,
+      "highlights": [
+        "5x the AI of Pilot",
+        "Unlimited job scans",
+        "60 interview credits a month: up to 30 voice or 60 text interviews",
+        "Monitored sessions with an integrity report",
+        "Saved code and test evidence in reports"
+      ]
+    },
+    {
+      "id": "fleet",
+      "name": "Fleet",
+      "tagline": "For teams and programs",
+      "audience": "Universities, bootcamps and career coaches",
+      "prices": {
+        "USD": {
+          "month": null,
+          "year": null
+        },
+        "INR": {
+          "month": null,
+          "year": null
+        }
+      },
+      "limits": {
+        "resumes": null,
+        "tailor": null,
+        "ats_check": null,
+        "review": null,
+        "apply_kit": null,
+        "scans": null,
+        "interview": null
+      },
+      "templates": [
+        "classic",
+        "modern",
+        "compact",
+        "academic",
+        "minimal"
+      ],
+      "seats": null,
+      "support": "Dedicated",
+      "rank": 3,
+      "contact_sales": true,
+      "recommended": false,
+      "highlights": [
+        "Unlimited interview credits",
+        "Seats for your whole cohort",
+        "Admin console and usage reporting",
+        "Single sign-on and invoicing"
+      ]
+    }
+  ]
+}

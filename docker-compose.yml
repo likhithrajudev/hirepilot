@@ -1,0 +1,97 @@
+# Full stack locally with real pdflatex + Postgres:  docker compose up --build   -> http://localhost:3000
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: hirepilot
+      POSTGRES_PASSWORD: hirepilot
+      POSTGRES_DB: hirepilot
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hirepilot"]
+      interval: 5s
+      retries: 10
+
+  # Shared read cache + shared invalidation. Needed as soon as more than one API instance runs.
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://hirepilot:hirepilot@db:5432/hirepilot
+      CACHE_BACKEND: redis
+      REDIS_URL: redis://redis:6379/0
+      PUBLIC_BASE_URL: http://localhost:3000
+      COOKIE_SECURE: "false"   # set "true" behind HTTPS
+      CODE_RUNNER_URL: http://code-runner:8080
+      CODE_RUNNER_TOKEN: ${CODE_RUNNER_TOKEN:-local-code-runner-change-before-production}
+      # Data created before accounts existed belongs to this email: only it can claim it, whenever it signs up.
+      CLAIM_LEGACY_EMAIL: ${CLAIM_LEGACY_EMAIL:-likhithraju0@gmail.com}
+      ADMIN_EMAILS: ${ADMIN_EMAILS:-likhithraju0@gmail.com}
+      # Social sign-in turns on when credentials are present (put them in a .env file next to this one).
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+      APPLE_CLIENT_ID: ${APPLE_CLIENT_ID:-}
+      APPLE_TEAM_ID: ${APPLE_TEAM_ID:-}
+      APPLE_KEY_ID: ${APPLE_KEY_ID:-}
+      APPLE_PRIVATE_KEY: ${APPLE_PRIVATE_KEY:-}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SECRET_KEY: local-dev-secret
+      CORS_ORIGINS: http://localhost:3000
+    depends_on:
+      db: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    ports: ["8000:8000"]
+    networks: [default, code-execution]
+
+  code-runtime:
+    profiles: [coding-runner]
+    build:
+      context: ./runner
+      target: runtime
+    image: hirepilot-code-runtime:local
+    command: ["python3", "--version"]
+    network_mode: none
+
+  code-runner:
+    profiles: [coding-runner]
+    build:
+      context: ./runner
+      target: controller
+    environment:
+      RUNNER_TOKEN: ${CODE_RUNNER_TOKEN:-local-code-runner-change-before-production}
+    volumes: ["/var/run/docker.sock:/var/run/docker.sock"]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs: ["/tmp:size=33554432,nosuid,nodev,noexec"]
+    mem_limit: 256m
+    pids_limit: 64
+    networks: [code-execution]
+    depends_on:
+      code-runtime: { condition: service_completed_successfully }
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        BACKEND_URL: http://backend:8000
+    ports: ["3000:3000"]
+    # Same-origin /api in prod is handled by the ALB; locally Next proxies to the backend service (build arg above).
+    depends_on: [backend]
+
+volumes:
+  pgdata:
+
+networks:
+  code-execution:
+    internal: true

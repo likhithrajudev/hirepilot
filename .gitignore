@@ -1,0 +1,14 @@
+node_modules/
+.next/
+cdk.out/
+dist/
+.venv/
+__pycache__/
+.pytest_cache/
+backend/data/
+.env
+.env.*
+!.env.example
+*.tsbuildinfo
+next-env.d.ts
+backups/

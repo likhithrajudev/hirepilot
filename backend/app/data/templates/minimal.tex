@@ -1,0 +1,24 @@
+\documentclass[10.5pt,<<PAPER>>]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=0.85in]{geometry}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\input{glyphtounicode}
+\pdfgentounicode=1
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\titleformat{\section}{\normalfont\bfseries\raggedright}{}{0em}{}
+\titlespacing*{\section}{0pt}{12pt}{4pt}
+\setlist[itemize]{label=--,leftmargin=0.2in,itemsep=1.5pt,topsep=2pt,parsep=0pt}
+\newcommand{\resumeHeader}[2]{{\LARGE\bfseries #1}\\[4pt]{\small #2}\vspace{4pt}\par}
+\newcommand{\resumeEntry}[4]{\textbf{#1} \textit{#3}\hfill #2\par\ifx\relax#4\relax\else{\small #4}\par\fi}
+\newcommand{\resumeItem}[1]{\item #1}
+\newenvironment{resumeItems}{\begin{itemize}}{\end{itemize}}
+\newcommand{\resumeSkill}[2]{\textbf{#1:} #2\par}
+\begin{document}
+\resumeHeader{<<FULL_NAME>>}{<<CONTACT_LINE>>}
+<<BODY>>
+\end{document}
